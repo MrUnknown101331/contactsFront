@@ -1,6 +1,5 @@
 import styles from './Side.module.css'
 import PropTypes from "prop-types";
-import {useEffect} from "react";
 
 function Side(props) {
 

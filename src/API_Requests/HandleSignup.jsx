@@ -15,25 +15,14 @@ const HandleSignup = async (username, email, password) => {
         const result = await response.json();
 
         if (response.ok) {
-            console.log(`Account created successfully. User ID: ${result._id}`);
-            await HandleLogin(email, password);
+            const result = await HandleLogin(email, password);
+            return {success: true, message: "Account created successfully!", accessToken: result.accessToken};
         } else {
-            console.error('Signup failed:', result.message);
+            return {success: false, message: result.message || 'Signup failed!'};
         }
     } catch (error) {
-        console.error('Error sending POST request:', error);
+        return {success: false, message: 'Error sending signup request.'};
     }
 };
 
 export default HandleSignup;
-
-/*
-POST http://localhost:3000/api/users/register
-Content-Type: application/json
-
-{
-  "username": "MyUserName2",
-  "email": "mysecondmail@nomail.com",
-  "password": "Very-Strong-Password"
-}
-*/

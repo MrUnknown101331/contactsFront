@@ -1,61 +1,72 @@
-import styles from './Login.module.css'
-import PropTypes from 'prop-types'
+import styles from './Login.module.css';
+import PropTypes from 'prop-types';
 import {useEffect, useState} from "react";
 import HandleLogin from "../API_Requests/HandleLogin.jsx";
+import HandleSignup from "../API_Requests/HandleSignup.jsx";
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {SvgIcon} from "@mui/material";
-import HandleSignup from "../API_Requests/HandleSignup.jsx";
+
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login(props) {
-
     const [isPassVisible, setIsPassVisible] = useState(false);
-    const togglePassVisible = () => {
-        setIsPassVisible((current) => !current);
-    }
-
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const togglePassVisible = () => {
+        setIsPassVisible((current) => !current);
+    };
+
     const handleLoginSubmit = async (event) => {
         event.preventDefault(); // Prevents page refresh on form submission
-        await HandleLogin(email, password);
+        const response = await HandleLogin(email, password);
+
+        if (response.success) {
+            toast.success("Login successful!");
+        } else {
+            toast.error(response.message || "Login failed!");
+        }
     };
 
     const handleRegisterSubmit = async (event) => {
         event.preventDefault();
-        await HandleSignup(username, email, password);
-    }
+        const response = await HandleSignup(username, email, password);
 
+        if (response.success) {
+            toast.success("Account created successfully! Logging in...");
+        } else {
+            toast.error(response.message || "Signup failed!");
+        }
+    };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const login = (
+    const loginForm = (
         <>
             <h1 className={styles.heading}>Log In</h1>
-            <p className={styles.text}>Enter your username and password to login</p>
+            <p className={styles.text}>Enter your email and password to log in</p>
             <form className={styles.form_container} onSubmit={handleLoginSubmit}>
                 <input type="text" className={styles.userInput} name="email" placeholder="Email" required
                        onChange={(e) => setEmail(e.target.value)}/>
                 <div className={styles.passBox}>
                     <input type={isPassVisible ? 'text' : 'password'} className={styles.passField} name="password"
-                           placeholder="Pasword" required
+                           placeholder="Password" required
                            onChange={(e) => setPassword(e.target.value)}/>
                     <SvgIcon className={styles.visibleIcon}
                              component={isPassVisible ? VisibilityOffIcon : VisibilityIcon}
                              onClick={togglePassVisible}/>
                 </div>
-                <button type="submit" className={styles.button}>log in</button>
+                <button type="submit" className={styles.button}>Log in</button>
             </form>
         </>
     );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const signup = (
+    const signupForm = (
         <>
             <h1 className={styles.heading}>Create Account</h1>
-            <p className={styles.text}>use your email for registeration</p>
+            <p className={styles.text}>Use your email for registration</p>
             <form className={styles.form_container} onSubmit={handleRegisterSubmit}>
                 <input type="text" className={styles.userInput} name="username" placeholder="Username" required
                        onChange={(e) => setUsername(e.target.value)}/>
@@ -63,34 +74,36 @@ function Login(props) {
                        onChange={(e) => setEmail(e.target.value)}/>
                 <div className={styles.passBox}>
                     <input type={isPassVisible ? 'text' : 'password'} className={styles.passField} name="password"
-                           placeholder="Pasword" required
+                           placeholder="Password" required
                            onChange={(e) => setPassword(e.target.value)}/>
                     <SvgIcon className={styles.visibleIcon}
                              component={isPassVisible ? VisibilityOffIcon : VisibilityIcon}
                              onClick={togglePassVisible}/>
                 </div>
-                <button type="submit" className={styles.button}>sign up</button>
+                <button type="submit" className={styles.button}>Sign up</button>
             </form>
         </>
     );
 
-    const [current, setCurrent] = useState(login);
+    const [current, setCurrent] = useState(loginForm);
     useEffect(() => {
         setTimeout(() => {
-            setCurrent(props.signUp ? signup : login);
-        }, 250)
-    }, [login, props.signUp, signup]);
+            setCurrent(props.signUp ? signupForm : loginForm);
+        }, 250);
+    }, [props.signUp, loginForm, signupForm]);
 
     return (
-        <div className={`${styles.login_container} ${props.signUp ? styles.toggle_right : ' '}`}>
-            {current}
-        </div>
+        <>
+            <div className={`${styles.login_container} ${props.signUp ? styles.toggle_right : ' '}`}>
+                {current}
+            </div>
+            <ToastContainer/>
+        </>
     );
 }
 
 Login.propTypes = {
     signUp: PropTypes.bool.isRequired
-}
-
+};
 
 export default Login;

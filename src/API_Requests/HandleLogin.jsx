@@ -12,26 +12,15 @@ const HandleLogin = async (email, password) => {
 
         if (response.ok) {
             const result = await response.json();
-            console.log('Login successful!');
-            console.log(`Access token received: ${result.accessToken}`);
+            return {success: true, accessToken: result.accessToken};
         } else {
             const errorResult = await response.json();
-            console.warn(`Login failed: ${errorResult.message || 'Unknown error'}`);
+            return {success: false, message: errorResult.message || 'Login failed!'};
         }
+        // eslint-disable-next-line no-unused-vars
     } catch (error) {
-        console.error('Error sending POST request:', error);
-        console.log('Error sending data');
+        return {success: false, message: 'Error sending login request.'};
     }
 };
 
 export default HandleLogin;
-
-/*
-POST http://localhost:3000/api/users/login
-    Content-Type: application/json
-
-{
-    "email": "mymail@nomail.com",
-    "password": "Very-Strong-Password"
-}
-*/

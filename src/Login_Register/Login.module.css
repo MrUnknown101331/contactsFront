@@ -8,11 +8,11 @@
     transition: all 0.5s ease-in-out;
 }
 
-.toggle_right{
+.toggle_right {
     transform: translateX(100%);
 }
 
-.text{
+.text {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0.3px;
@@ -41,6 +41,32 @@
     border-radius: 8px;
     width: 100%;
     outline: none;
+}
+
+.passBox {
+    background-color: #eee;
+    border: none;
+    margin: 8px 0;
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 8px;
+    width: 100%;
+    outline: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.passField {
+    width: 100%;
+    font-size: 13px;
+    background-color: #eee;
+    border: none;
+    outline: none;
+}
+
+.visibleIcon {
+    color: #818181;
+    cursor: pointer;
 }
 
 .button {

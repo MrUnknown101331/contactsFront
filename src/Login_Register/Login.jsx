@@ -27,6 +27,8 @@ function Login(props) {
 
         if (response.success) {
             toast.success("Login successful!");
+            props.setAccessToken(response.accessToken);
+            props.setIsLoggedIn(true);
         } else {
             toast.error(response.message || "Login failed!");
         }
@@ -38,11 +40,14 @@ function Login(props) {
 
         if (response.success) {
             toast.success("Account created successfully! Logging in...");
+            props.setAccessToken(response.accessToken);
+            props.setIsLoggedIn(true);
         } else {
             toast.error(response.message || "Signup failed!");
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const loginForm = (
         <>
             <h1 className={styles.heading}>Log In</h1>
@@ -63,6 +68,7 @@ function Login(props) {
         </>
     );
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const signupForm = (
         <>
             <h1 className={styles.heading}>Create Account</h1>
@@ -103,7 +109,9 @@ function Login(props) {
 }
 
 Login.propTypes = {
-    signUp: PropTypes.bool.isRequired
+    signUp: PropTypes.bool.isRequired,
+    setIsLoggedIn: PropTypes.func.isRequired,
+    setAccessToken: PropTypes.func.isRequired
 };
 
 export default Login;
